@@ -9,5 +9,5 @@ if [[ "$1" == "c" ]]; then
 elif [[ "$1" == "d" ]]; then
   curl -u "$username:$password" -X DELETE https://api.github.com/repos/$username/$repo_name
 else 
-  echo "Param√tre incorrect"
+  echo "Param√®tre incorrect"
 fi
