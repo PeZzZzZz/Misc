@@ -1,0 +1,57 @@
+alias d="docker"
+dexec(){
+  docker exec -it $1 /bin/bash
+}
+
+dstop(){
+  docker stop $1
+}
+
+dstart(){
+  docker start $1
+}
+
+drm(){
+  docker rm -f $1
+}
+
+dcp(){
+  docker cp $1 $2
+}
+
+dps(){
+  docker ps 
+}
+
+dips(){
+  docker images
+}
+
+dpriv(){
+  docker run -dit --privileged $1
+}
+
+dip(){
+  docker inspect $1 |grep IPA
+}
+
+dmount(){
+  docker exec $1 mount --bind /dev /home/jails/dev
+  docker exec $1 mount --bind /dev/pts /home/jails/dev/pts
+  docker exec $1 mount --bind /proc /home/jails/proc
+  docker exec $1 mount --bind /sys /home/jails/sys
+}
+
+dumount(){
+  docker exec $1 mount --bind /dev /home/jails/dev
+  docker exec $1 mount --bind /dev/pts /home/jails/dev/pts
+  docker exec $1 mount --bind /proc /home/jails/proc
+  docker exec $1 mount --bind /sys /home/jails/sys
+}
+disize(){
+  docker image inspect $1 --format='{{.Size}}'
+}
+
+dcom(){
+  docker commit $1 $2
+}
