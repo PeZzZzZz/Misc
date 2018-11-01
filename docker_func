@@ -1,5 +1,6 @@
 alias d="docker"
-dexec(){
+
+de(){
   docker exec -it $1 /bin/bash
 }
 
@@ -13,6 +14,10 @@ dstart(){
 
 drm(){
   docker rm -f $1
+}
+
+drmi(){
+  docker rmi -f $1
 }
 
 dcp(){
@@ -36,10 +41,10 @@ dip(){
 }
 
 dmount(){
-  docker exec $1 mount --bind /dev /home/jails/dev
-  docker exec $1 mount --bind /dev/pts /home/jails/dev/pts
-  docker exec $1 mount --bind /proc /home/jails/proc
-  docker exec $1 mount --bind /sys /home/jails/sys
+  docker exec $1 mount --bind /dev $2
+  docker exec $1 mount --bind /dev/pts $3
+  docker exec $1 mount --bind /proc $4
+  docker exec $1 mount --bind /sys $5
 }
 
 dumount(){
@@ -48,10 +53,25 @@ dumount(){
   docker exec $1 mount --bind /proc /home/jails/proc
   docker exec $1 mount --bind /sys /home/jails/sys
 }
-disize(){
-  docker image inspect $1 --format='{{.Size}}'
+ds(){
+  docker $1 |grep $1 |awk '{print$1 ":" $NF}'
 }
 
 dcom(){
   docker commit $1 $2
 }
+
+dsha(){
+  docker exec -it $1 /bin/sh
+}
+
+function dipall() {
+        if [ -z $1 ]; then
+                docker ps -a --format "{{.ID}}" | while read -r line ; do
+                        echo $line $(docker inspect --format "{{ .Name }} {{ .NetworkSettings.Networks.bridge.IPAddress }}" $line | sed 's/\///'):$(docker port "$line" | grep -o "0.0.0.0:.*" | cut -f2 -d:)
+                done
+        else
+                echo $(docker inspect --format "{{.ID }} {{ .Name }} {{ .NetworkSettings.Networks.bridge.IPAddress }}" $1 | sed 's/\///'):$(docker port "$1" | grep -o "0.0.0.0:.*" | cut -f2 -d:)
+        fi
+}
+
